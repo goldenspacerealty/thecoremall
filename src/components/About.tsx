@@ -1,346 +1,253 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import storyboardImage from '@/assets/storyboard-image.avif'
+import { useEffect, useState, useRef } from "react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import shop from "/shop images.avif";
+const images = [
+  "/gleary/Imag1.avif",
+  "/gleary/gl3.avif",
+  "/gleary/gl4.avif",
+  "/gleary/gl5.avif",
+  "/gleary/gl6.avif",
+  "/gleary/gl7.jpg",
+  "/gleary/gl8.jpg",
+  "/gleary/gl9.jpg",
+  "/gleary/image2.avif",
+  "/gleary/About2.avif",
+  "/gleary/sliderhome.webp",
+];
 
 export function About() {
-  const [activeFrame, setActiveFrame] = useState(-1)
-  const [animationStarted, setAnimationStarted] = useState(false)
-
-  const processSteps = [
-    {
-      number: "01",
-      title: "Concept & Script",
-      description: "Scene‑by‑scene draft with dialogues and time‑codes",
-      color: "accent-blue"
-    },
-    {
-      number: "02", 
-      title: "Look & Storyboard",
-      description: "AI engine selection and visual testing",
-      color: "accent-emerald"
-    },
-    {
-      number: "03",
-      title: "AI Production",
-      description: "Motion tests and multi-variant generation",
-      color: "accent-purple"
-    },
-    {
-      number: "04",
-      title: "Post‑production",
-      description: "VFX, color grading, and audio mixing",
-      color: "accent-blue"
-    },
-    {
-      number: "05",
-      title: "Master Delivery",
-      description: "Multi-format export and secure transfer",
-      color: "accent-purple"
-    }
-  ]
+  const [animationStarted, setAnimationStarted] = useState(false);
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const stripRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
 
   useEffect(() => {
-    // Start film animation after a 3 second pause
-    setTimeout(() => {
-      setAnimationStarted(true)
-      processSteps.forEach((_, index) => {
-        setTimeout(() => {
-          setActiveFrame(index)
-         
-        }, index * 2000 + 1000) // Ultra slow: Start after 24s, then every 72s
-      })
-    }, 3000) // 3 second pause after section loads
-  }, [])
+    setTimeout(() => setAnimationStarted(true), 1000);
+  }, []);
+
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    if (lightbox === null) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight")
+        setLightbox((prev) =>
+          prev !== null ? (prev + 1) % images.length : null,
+        );
+      if (e.key === "ArrowLeft")
+        setLightbox((prev) =>
+          prev !== null ? (prev - 1 + images.length) % images.length : null,
+        );
+      if (e.key === "Escape") setLightbox(null);
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [lightbox]);
+
+  // Mouse drag to scroll film strip
+  const onMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    startX.current = e.pageX - (stripRef.current?.offsetLeft || 0);
+    scrollLeft.current = stripRef.current?.scrollLeft || 0;
+    setIsPaused(true);
+  };
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !stripRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - (stripRef.current.offsetLeft || 0);
+    stripRef.current.scrollLeft = scrollLeft.current - (x - startX.current);
+  };
+  const onMouseUp = () => {
+    isDragging.current = false;
+  };
 
   return (
-    <section id="about" className="relative py-20 bg-background overflow-hidden">
-      
-      {/* Cinematic Background */}
+    <section
+      id="about"
+      className="relative pb-16 bg-background overflow-hidden"
+    >
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card/20 to-background" />
-      
-      {/* Film Grain Effect */}
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
-        <div className="w-full h-full" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0,0,0,0.8) 1px, transparent 0)`,
-          backgroundSize: '3px 3px',
-          animation: 'filmGrain 8s infinite'
-        }} />
-      </div>
 
       <div className="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
-        
         {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-3 h-3 bg-accent-emerald rounded-full animate-pulse" />
-            <span className="text-sm font-semibold text-muted-foreground">
-              Behind the Scenes
-            </span>
-            <div className="w-3 h-3 bg-accent-blue rounded-full animate-pulse" />
-          </div>
-          
+        <div className="text-center mb-10">
           <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight mb-6 text-foreground">
-            How We Create Magic
+            Our Gallery
           </h2>
-          
           <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-            Watch our process unfold frame by frame
+            A glimpse into The Core Mall — click any image to view
           </p>
         </div>
 
-        {/* Film Strip Container */}
-        <div className="relative max-w-7xl mx-auto">
-          
-          {/* Film Strip Background */}
-          <div className="relative bg-gradient-to-r from-gray-950 via-gray-900 to-gray-950 rounded-xl overflow-hidden"
-               style={{ boxShadow: '0 25px 50px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.05)' }}>
-            
-            {/* Film Perforations - Top - Now animated */}
-            <div className="absolute top-0 left-0 right-0 h-6 bg-black z-20 overflow-hidden">
-              <div className={`flex items-center justify-between px-12 h-full ${
-                animationStarted ? 'perforations-scroll-animation' : ''
-              }`} style={{ width: '200%' }}>
-                {/* First set of perforations */}
-                {[...Array(20)].map((_, i) => (
-                  <div key={`top-${i}`} className="w-4 h-3 bg-gray-800 rounded-sm border border-gray-700 flex-shrink-0" 
-                       style={{ boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.8)' }} />
-                ))}
-                {/* Duplicate set for seamless loop */}
-                {[...Array(20)].map((_, i) => (
-                  <div key={`top-dup-${i}`} className="w-4 h-3 bg-gray-800 rounded-sm border border-gray-700 flex-shrink-0" 
-                       style={{ boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.8)' }} />
-                ))}
-              </div>
-            </div>
-            
-            {/* Film Perforations - Bottom - Now animated */}
-            <div className="absolute bottom-0 left-0 right-0 h-6 bg-black z-20 overflow-hidden">
-              <div className={`flex items-center justify-between px-12 h-full ${
-                animationStarted ? 'perforations-scroll-animation' : ''
-              }`} style={{ width: '200%' }}>
-                {/* First set of perforations */}
-                {[...Array(20)].map((_, i) => (
-                  <div key={`bottom-${i}`} className="w-4 h-3 bg-gray-800 rounded-sm border border-gray-700 flex-shrink-0"
-                       style={{ boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.8)' }} />
-                ))}
-                {/* Duplicate set for seamless loop */}
-                {[...Array(20)].map((_, i) => (
-                  <div key={`bottom-dup-${i}`} className="w-4 h-3 bg-gray-800 rounded-sm border border-gray-700 flex-shrink-0"
-                       style={{ boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.8)' }} />
+        {/* Film Strip */}
+        <div className="relative max-w-full mx-auto">
+          <div
+            className="relative bg-gradient-to-r from-gray-950 via-gray-900 to-gray-950 rounded-xl overflow-hidden"
+            style={{ boxShadow: "0 25px 50px rgba(0,0,0,0.5)" }}
+          >
+            {/* Top Perforations */}
+            <div className="absolute top-0 left-0 right-0 h-8 bg-black z-20 overflow-hidden">
+              <div
+                className={`flex items-center justify-between px-8 h-full ${animationStarted && !isPaused ? "perforations-scroll-animation" : ""}`}
+                style={{ width: "200%" }}
+              >
+                {[...Array(40)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-5 h-4 bg-gray-800 rounded-sm border border-gray-700 flex-shrink-0"
+                  />
                 ))}
               </div>
             </div>
 
-            {/* Film Frames Container - Scrolling Animation */}
-            <div className="relative py-6 px-8 overflow-hidden h-64 max-w-full">
-              <div className={`flex transition-transform duration-1000 ease-in-out ${
-                animationStarted ? 'film-scroll-animation' : ''
-              }`} style={{ width: 'max-content', gap: '32px' }}>
-                
-                {/* Original sequence for seamless loop */}
-                {/* Start frame */}
-                <div className="flex-shrink-0 w-80 h-52 bg-gray-800 rounded-lg border-2 border-gray-700 opacity-60 flex items-center justify-center" 
-                     style={{ boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4)' }}>
-                  <div className="text-gray-400 font-mono tracking-wider">● START</div>
-                </div>
-                
-                {/* Process Step Frames */}
-                {processSteps.map((step, index) => (
+            {/* Bottom Perforations */}
+            <div className="absolute bottom-0 left-0 right-0 h-8 bg-black z-20 overflow-hidden">
+              <div
+                className={`flex items-center justify-between px-8 h-full ${animationStarted && !isPaused ? "perforations-scroll-animation" : ""}`}
+                style={{ width: "200%" }}
+              >
+                {[...Array(40)].map((_, i) => (
                   <div
-                    key={step.number}
-                    className={`flex-shrink-0 w-80 h-52 bg-background rounded-lg border-4 ${
-                      activeFrame >= index 
-                        ? `border-${step.color}` 
-                        : 'border-gray-600'
-                    }`}
-                    style={{
-                      boxShadow: '0 8px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)'
-                    }}
-                  >
-                    
-                    {/* Frame Content */}
-                    <div className="relative h-full p-6 flex flex-col justify-between">
-                      
-                      {/* Frame Number Badge */}
-                      <div className="absolute -top-4 -left-4 w-12 h-12 bg-foreground text-background rounded-full flex items-center justify-center font-black z-10 border-3 border-white text-lg"
-                           style={{ boxShadow: '0 6px 12px rgba(0,0,0,0.4)' }}>
-                        {step.number}
-                      </div>
-                      
-                      {/* Content */}
-                      <div className="opacity-100">
-                        
-                        {/* Step Title */}
-                        <h3 className="font-black text-xl leading-tight mb-4 text-foreground">
-                          {step.title}
-                        </h3>
-                        
-                        {/* Step Description */}
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {step.description}
-                        </p>
-                      </div>
-                      
-                      {/* Film frame edge lines */}
-                      <div className="absolute left-1 top-1 bottom-1 w-px bg-gray-300/20" />
-                      <div className="absolute right-1 top-1 bottom-1 w-px bg-gray-300/20" />
-                      <div className="absolute top-1 left-1 right-1 h-px bg-gray-300/20" />
-                      <div className="absolute bottom-1 left-1 right-1 h-px bg-gray-300/20" />
-                    </div>
-                  </div>
+                    key={i}
+                    className="w-5 h-4 bg-gray-800 rounded-sm border border-gray-700 flex-shrink-0"
+                  />
                 ))}
-                
-                {/* End frame */}
-                <div className="flex-shrink-0 w-80 h-52 bg-gray-800 rounded-lg border-2 border-gray-700 opacity-60 flex items-center justify-center"
-                     style={{ boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4)' }}>
-                  <div className="text-gray-400 font-mono tracking-wider">● END</div>
-                </div>
-                
-                {/* Duplicate set for seamless loop */}
-                {/* Start frame duplicate */}
-                <div className="flex-shrink-0 w-80 h-52 bg-gray-800 rounded-lg border-2 border-gray-700 opacity-60 flex items-center justify-center" 
-                     style={{ boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4)' }}>
-                  <div className="text-gray-400 font-mono tracking-wider">● START</div>
-                </div>
-                
-                {/* Process Step Frames duplicate */}
-                {processSteps.map((step, index) => (
+              </div>
+            </div>
+
+            {/* Scrollable Strip */}
+            <div
+              ref={stripRef}
+              className="relative py-10 px-6 overflow-x-auto cursor-grab active:cursor-grabbing select-none"
+              style={{ scrollbarWidth: "none" }}
+              onMouseDown={onMouseDown}
+              onMouseMove={onMouseMove}
+              onMouseUp={onMouseUp}
+              onMouseLeave={onMouseUp}
+            >
+              <div
+                className={`flex ${animationStarted && !isPaused ? "film-scroll-animation" : ""}`}
+                style={{ width: "max-content", gap: "20px" }}
+              >
+                {[...images, ...images].map((src, index) => (
                   <div
-                    key={`duplicate-${step.number}`}
-                    className={`flex-shrink-0 w-80 h-52 bg-background rounded-lg border-4 ${
-                      activeFrame >= index 
-                        ? `border-${step.color}` 
-                        : 'border-gray-600'
-                    }`}
+                    key={index}
+                    className="flex-shrink-0 overflow-hidden rounded-xl border-2 border-gray-600 hover:border-accent-purple transition-all duration-300 cursor-pointer group"
                     style={{
-                      boxShadow: '0 8px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)'
+                      width: "380px",
+                      height: "260px",
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
                     }}
+                    onClick={() => setLightbox(index % images.length)}
                   >
-                    
-                    {/* Frame Content */}
-                    <div className="relative h-full p-6 flex flex-col justify-between">
-                      
-                      {/* Frame Number Badge */}
-                      <div className="absolute -top-4 -left-4 w-12 h-12 bg-foreground text-background rounded-full flex items-center justify-center font-black z-10 border-3 border-white text-lg"
-                           style={{ boxShadow: '0 6px 12px rgba(0,0,0,0.4)' }}>
-                        {step.number}
-                      </div>
-                      
-                      {/* Content */}
-                      <div className="opacity-100">
-                        
-                        {/* Step Title */}
-                        <h3 className="font-black text-xl leading-tight mb-4 text-foreground">
-                          {step.title}
-                        </h3>
-                        
-                        {/* Step Description */}
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {step.description}
-                        </p>
-                      </div>
-                      
-                      {/* Film frame edge lines */}
-                      <div className="absolute left-1 top-1 bottom-1 w-px bg-gray-300/20" />
-                      <div className="absolute right-1 top-1 bottom-1 w-px bg-gray-300/20" />
-                      <div className="absolute top-1 left-1 right-1 h-px bg-gray-300/20" />
-                      <div className="absolute bottom-1 left-1 right-1 h-px bg-gray-300/20" />
-                    </div>
+                    <img
+                      src={src}
+                      alt={`Gallery ${(index % images.length) + 1}`}
+                      loading="lazy"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-          
-          {/* Enhanced Projector Light Effect */}
-          {activeFrame >= 0 && (
-            <div className="absolute inset-0 pointer-events-none">
-              <div 
-                className="absolute top-1/2 left-1/2 w-48 h-48 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-10"
-                style={{
-                  background: 'radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 20%, rgba(255,255,0,0.2) 40%, transparent 60%)',
-                  animation: 'projectorLight 12s ease-in-out infinite'
-                }}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Film Controls */}
-        <div className="mt-12 text-center">
-          <div className="inline-flex items-center gap-6 bg-card/80 backdrop-blur-sm clean-border rounded-2xl px-8 py-4 subtle-shadow">
-            
-            {/* Film Speed Indicator */}
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-accent-emerald rounded-full animate-pulse" />
-              <span className="text-sm font-semibold text-foreground">24 FPS</span>
-            </div>
-            
-            <div className="w-px h-6 bg-border" />
-            
-            {/* Duration */}
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-accent-blue rounded-full animate-pulse" style={{animationDelay: '0.5s'}} />
-              <span className="text-sm font-semibold text-foreground">5-7 Days</span>
-            </div>
-            
-            <div className="w-px h-6 bg-border" />
-            
-            {/* Quality */}
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-accent-purple rounded-full animate-pulse" style={{animationDelay: '1s'}} />
-              <span className="text-sm font-semibold text-foreground">Cinema Quality</span>
-            </div>
-          </div>
-        </div>
-
-        {/* AI Generated Content Gallery */}
-        <div className="mt-20">
-          <div className="text-center mb-8">
-            <p className="text-muted-foreground">
-              A glimpse into our storyboard development process
-            </p>
-          </div>
-          
-          {/* Gallery Image */}
-          <div className="relative max-w-6xl mx-auto">
-            <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-4 overflow-hidden">
-              
-              {/* Film grain overlay for authenticity */}
-              <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                   style={{
-                     backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.8) 1px, transparent 0)`,
-                     backgroundSize: '4px 4px'
-                   }} />
-              
-              {/* Main gallery image */}
-              <img 
-                src={storyboardImage}
-                alt="Collection of AI-generated video content thumbnails showcasing MOJJU's diverse output"
-                className="w-full h-auto rounded-xl"
-                style={{
-                  filter: 'contrast(1.05) saturate(1.1) brightness(0.95)'
-                }}
-              />
-              
-              {/* Subtle overlay gradient for depth */}
-              <div className="absolute inset-4 rounded-xl pointer-events-none"
-                   style={{
-                     background: 'linear-gradient(135deg, rgba(37,99,235,0.03) 0%, transparent 20%, transparent 80%, rgba(124,58,237,0.03) 100%)'
-                   }} />
-            </div>
-            
-            {/* Caption */}
-            <div className="mt-6 text-center">
-              <p className="text-sm text-muted-foreground italic">
-                "Diverse scenarios, characters, and styles — all generated through our AI pipeline"
-              </p>
             </div>
           </div>
         </div>
       </div>
-      
+
+      <div className="relative max-w-6xl mx-auto py-10">
+        <div className="relative bg-white rounded-2xl p-4 overflow-hidden">
+          {/* Film grain overlay for authenticity */}
+          <div
+            className="absolute inset-0 opacity-[0.03] pointer-events-none border-2  bogder-black "
+            style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.8) 1px, transparent 0)`,
+              backgroundSize: "4px 4px",
+            }}
+          />
+
+          {/* Main gallery image */}
+          <img
+            src={shop}
+            alt="Shop images"
+            className="w-full h-auto rounded-xl border-4 border-black"
+            style={{
+              filter: "contrast(1.05) saturate(1.1) brightness(0.95)",
+            }}
+          />
+
+          {/* Subtle overlay gradient for depth */}
+          <div
+            className="absolute inset-4 rounded-xl pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(37,99,235,0.03) 0%, transparent 20%, transparent 80%, rgba(124,58,237,0.03) 100%)",
+            }}
+          />
+        </div>
+
+        {/* Caption */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-muted-foreground italic">
+            "Diverse scenarios, characters, and styles — all generated through
+            our AI pipeline"
+          </p>
+        </div>
+      </div>
+
+      {/* Lightbox */}
+      {lightbox !== null && (
+        <div
+          className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4"
+          onClick={() => setLightbox(null)}
+        >
+          {/* Close */}
+          <button
+            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            onClick={() => setLightbox(null)}
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          {/* Prev */}
+          <button
+            className="absolute left-4 z-10 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightbox((lightbox - 1 + images.length) % images.length);
+            }}
+          >
+            <ChevronLeft className="w-7 h-7" />
+          </button>
+
+          {/* Image */}
+          <img
+            src={images[lightbox]}
+            alt={`Gallery ${lightbox + 1}`}
+            className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {/* Next */}
+          <button
+            className="absolute right-4 z-10 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightbox((lightbox + 1) % images.length);
+            }}
+          >
+            <ChevronRight className="w-7 h-7" />
+          </button>
+
+          {/* Counter */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-sm">
+            {lightbox + 1} / {images.length}
+          </div>
+        </div>
+      )}
     </section>
-  )
+  );
 }
