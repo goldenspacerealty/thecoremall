@@ -307,7 +307,7 @@ export function Hero() {
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 1.5 }}
-        className="absolute top-[40%] left-6 sm:left-8 lg:left-12 z-40"
+        className="absolute top-[30%] sm:top-[40%] left-6 sm:left-8 lg:left-12 z-40"
       >
         <div className="max-w-2xl">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-tight text-white">
