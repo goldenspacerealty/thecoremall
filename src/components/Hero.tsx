@@ -311,12 +311,10 @@ export function Hero() {
       >
         <div className="max-w-2xl">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-tight text-white">
-            <span className="block">The Core Mall</span>
+            The Core Mall Ghaziabad — Premium Commercial Investment Destination
           </h1>
           <p className="text-gray-300 text-lg mt-4">
-            Quality Shopping Experience at Concept Capital Aesthetically built
-            project in Ghaziabad offering modern conveniences for a quality
-            living experience.
+            Premium retail shops, food court &amp; studio apartments in Crossing Republik, Ghaziabad. High rental yield. RERA approved.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <a

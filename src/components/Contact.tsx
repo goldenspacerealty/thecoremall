@@ -41,11 +41,19 @@ export function Contact() {
       return
     }
     setIsSubmitting(true)
+
+    // Save to backend
+    fetch('/api/inquiries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...formData, source: 'contact' })
+    }).catch(() => {})
+
     setTimeout(() => {
       toast({ title: 'Message sent!', description: "We'll get back to you soon." })
       setFormData({ name: '', email: '', phone: '', message: '' })
       setIsSubmitting(false)
-    }, 1000)
+    }, 800)
   }
 
   return (

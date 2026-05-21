@@ -8,6 +8,8 @@ export function PopupForm() {
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
+    // Clear for testing - remove this in production
+    // localStorage.removeItem('popupDone')
     if (localStorage.getItem('popupDone')) return
     const timer = setTimeout(() => setVisible(true), 15000)
     return () => clearTimeout(timer)
@@ -23,6 +25,18 @@ export function PopupForm() {
     if (!form.name || !form.email) return
     setSubmitting(true)
     try {
+      // Save to localStorage
+      const inquiry = {
+        id: Date.now().toString(),
+        name: form.name, email: form.email, phone: form.phone,
+        message: form.message || 'Popup enquiry',
+        source: 'popup', status: 'new',
+        created_at: new Date().toISOString()
+      }
+      const existing = JSON.parse(localStorage.getItem('inquiries') || '[]')
+      localStorage.setItem('inquiries', JSON.stringify([inquiry, ...existing]))
+
+      // Also try backend
       await fetch('/api/inquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

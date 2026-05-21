@@ -100,7 +100,7 @@ export function Footer() {
                   href="tel:+918899883034"
                   className="hover:text-background transition-colors hover:text-background hover:underline hover:text-[#0077B5] hover:decoration-[#0077B5]"
                 >
-                  +91 99535 48629
+                  +91 8447490505
                 </a>
               </li>
               <li>
