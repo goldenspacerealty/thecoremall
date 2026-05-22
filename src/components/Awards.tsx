@@ -26,7 +26,7 @@ export function Awards() {
   return (
     <section
       id="highlights"
-      className="relative py-24 bg-background overflow-hidden"
+      className="relative pb-10 bg-background overflow-hidden"
     >
       {/* Background glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-accent-purple/5 via-background to-accent-blue/5 pointer-events-none" />
@@ -115,7 +115,7 @@ export function Awards() {
                 Experience the moment of definition in Ghaziabad's architecture.
               </p>
               <p className="text-sm font-bold text-foreground">
-                Contact us today to book your space! +91 9953548629
+                Contact us today to book your space! +91 8447490505
               </p>
             </div>
 

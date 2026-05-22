@@ -55,7 +55,7 @@ export function Team() {
   const [activeFloor, setActiveFloor] = useState(floorData[0]);
 
   return (
-    <section id="plans" className="w-full bg-[#f5f5f5] py-20 overflow-hidden">
+    <section id="plans" className="w-full bg-[#f5f5f5] py-10 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         {/* Top Heading */}
         <div className="mb-16 text-center">
@@ -144,11 +144,12 @@ export function Team() {
             </div>
 
             {/* Button */}
-            <a href="#location"
-              className="inline-block bg-accent-purple hover:bg-accent-purple/80 transition-all duration-300 text-white px-14 py-5 text-lg font-semibold tracking-wide uppercase"
+            <button // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              onClick={() => (window as any).openPopupForm?.()}
+              className="inline-block bg-accent-purple hover:bg-accent-purple/80 transition-all duration-300 text-white px-14 py-5 text-lg font-semibold tracking-wide uppercase cursor-pointer"
             >
               Schedule
-            </a>
+            </button>
           </div>
         </div>
       </div>

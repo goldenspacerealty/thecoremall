@@ -307,22 +307,22 @@ export function Hero() {
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 1.5 }}
-        className="absolute top-[30%] sm:top-[40%] left-6 sm:left-8 lg:left-12 z-40"
+        className="absolute top-[35%] left-6 sm:left-8 lg:left-12 z-40"
       >
         <div className="max-w-2xl">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-tight text-white">
+          <h1 className="text-3xl sm:text-4xl font-black leading-tight text-white">
             The Core Mall Ghaziabad — Premium Commercial Investment Destination
           </h1>
           <p className="text-gray-300 text-lg mt-4">
             Premium retail shops, food court &amp; studio apartments in Crossing Republik, Ghaziabad. High rental yield. RERA approved.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 px-7 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md transition-all"
+            <button // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              onClick={() => (window as any).openPopupForm?.()}
+              className="inline-flex items-center gap-2 px-7 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md transition-all cursor-pointer"
             >
               Schedule a Visit
-            </a>
+            </button>
             <a
               href="#amenities"
               className="inline-flex items-center gap-2 px-7 py-3 border border-white/50 hover:bg-white/10 text-white font-semibold rounded-md transition-all"

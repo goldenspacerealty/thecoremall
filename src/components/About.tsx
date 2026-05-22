@@ -75,7 +75,7 @@ export function About() {
       <div className="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
         {/* Header */}
         <div className="text-center mb-10">
-          <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight mb-6 text-foreground">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-foreground leading-tight text-center">
             Our Gallery
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">

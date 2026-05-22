@@ -33,7 +33,7 @@ export function Projects() {
             </p>
 
             <div className="flex justify-center lg:justify-start">
-              <a href="#plans">
+              <a href="#amenities">
                 <Button className="bg-accent-purple hover:bg-accent-purple/80 text-white px-8 py-6 rounded-full text-lg font-medium transition-all">
                   See Our Projects
                 </Button>
