@@ -1,0 +1,8 @@
+version: 3
+name: thecoremall
+zone_id: 25ca57e6bd2da94327abd5b3a3d437e3
+zone_name: goldenspacerealty.com
+account_id: ab088f3e3460a51e61f450ede682f9e9
+routes:
+  - pattern: "thecoremall.goldenspacerealty.com/*"
+    script: "thecoremall-backend/index.js"

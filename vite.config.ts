@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import fs from "fs";
 
 export default defineConfig({
   server: {
@@ -15,12 +16,35 @@ export default defineConfig({
     }
   },
   define: {
-    // Use absolute production backend URL in all builds.
-    // In dev  → Vite proxy intercepts http://localhost:5000/api/*
-    // In prod → browser calls the Render backend directly
     'import.meta.env.VITE_API_URL': JSON.stringify('https://thecoremallbackend.onrender.com'),
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    // Copy static response on the server to the client, used an example of 'Hello world'
+    // Copy SPA fallback files from public/ → dist/ so routes like /admin don't 404
+    // on static hosts (cPanel, Cloudflare, Netlify, etc.)
+    // Applies static copies
+    {
+      name: 'copy-static-routes',
+      enforce: 'post',
+      writeBundle() {
+        const srcDir = path.resolve(__dirname, 'public');
+        const dstDir = path.resolve(__dirname, 'dist');
+
+        const files = ['_redirects', '404.html'];
+
+        for (const file of files) {
+          const src = path.join(srcDir, file);
+          const dst = path.join(dstDir, file);
+          if (fs.existsSync(src)) {
+            fs.copyFileSync(src, dst);
+            console.log(`[copy-static-routes] ${src} → ${dst}`);
+          }
+        }
+      }
+    }
+
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
