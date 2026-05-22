@@ -1,7 +1,12 @@
-const API_BASE = import.meta.env.VITE_API_URL || ''
+// In development (import.meta.env.PROD is false at compile time) → relative /api/*
+// is caught by the Vite proxy and forwarded to the local backend.
+// In production (PROD is true at compile time) → absolute Render backend URL.
+const API_BASE = import.meta.env.PROD
+  ? 'https://thecoremallbackend.onrender.com'
+  : ''
 
 function url(path: string) {
-  return `${API_BASE}${path}`
+  return API_BASE ? `${API_BASE}${path}` : path
 }
 
 export async function apiGet<T>(path: string): Promise<T> {

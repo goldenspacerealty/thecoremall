@@ -15,9 +15,7 @@ export default defineConfig({
       }
     }
   },
-  define: {
-    'import.meta.env.VITE_API_URL': JSON.stringify('https://thecoremallbackend.onrender.com'),
-  },
+
   plugins: [
     react(),
     // Copy static response on the server to the client, used an example of 'Hello world'
