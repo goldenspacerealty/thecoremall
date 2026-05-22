@@ -14,6 +14,12 @@ export default defineConfig({
       }
     }
   },
+  define: {
+    // Use absolute production backend URL in all builds.
+    // In dev  → Vite proxy intercepts http://localhost:5000/api/*
+    // In prod → browser calls the Render backend directly
+    'import.meta.env.VITE_API_URL': JSON.stringify('https://thecoremallbackend.onrender.com'),
+  },
   plugins: [react()],
   resolve: {
     alias: {

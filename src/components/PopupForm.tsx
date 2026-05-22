@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { X, Send } from 'lucide-react'
+import { apiPost, apiGet } from '@/lib/api'
 
 // Global helpers so any button can open/close the popup
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -88,15 +89,11 @@ export function PopupForm({ open: controlledOpen, onOpenChange }: PopupFormProps
       const existing = JSON.parse(localStorage.getItem('inquiries') || '[]')
       localStorage.setItem('inquiries', JSON.stringify([inquiry, ...existing]))
 
-      await fetch('/api/inquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          message: form.message || 'Popup enquiry',
-        }),
+      await apiPost('/api/inquiries', {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        message: form.message || 'Popup enquiry',
       })
     } catch {
       // ignore submission errors

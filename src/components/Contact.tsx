@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useToast } from '@/hooks/use-toast'
 import { MapPin } from 'lucide-react'
+import { apiPost } from '@/lib/api'
 
 const locations = [
   {
@@ -43,11 +44,7 @@ export function Contact() {
     setIsSubmitting(true)
 
     // Save to backend
-    fetch('/api/inquiries', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...formData, source: 'contact' })
-    }).catch(() => {})
+    apiPost('/api/inquiries', { ...formData, source: 'contact' }).catch(() => {})
 
     setTimeout(() => {
       toast({ title: 'Message sent!', description: "We'll get back to you soon." })

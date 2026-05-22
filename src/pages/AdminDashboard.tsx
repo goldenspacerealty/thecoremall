@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LogOut, Search, RefreshCw, Trash2, Mail, Phone, MessageSquare, Users, CheckCircle, Clock, AlertCircle } from 'lucide-react'
+import { apiGet, apiDelete } from '@/lib/api'
 
 interface Inquiry {
   _id?: string
@@ -13,11 +15,9 @@ interface Inquiry {
   status?: string
   createdAt?: string
   created_at?: string
-}
+  }
 
-const API = import.meta.env.VITE_API_URL || ''
-
-export default function AdminDashboard() {
+  export default function AdminDashboard() {
   const navigate = useNavigate()
   const [inquiries, setInquiries] = useState<Inquiry[]>([])
   const [loading, setLoading] = useState(true)
@@ -36,8 +36,7 @@ export default function AdminDashboard() {
   const fetchInquiries = async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/inquiries')
-      const data = await res.json()
+      const data = await apiGet('/api/inquiries')
       setInquiries(data.data || data.inquiries || [])
     } catch {
       setInquiries([])
@@ -47,7 +46,7 @@ export default function AdminDashboard() {
 
   const deleteInquiry = async (id: string) => {
     if (!confirm('Delete this inquiry?')) return
-    await fetch(`/api/inquiries/${id}`, { method: 'DELETE' })
+    await apiDelete(`/api/inquiries/${id}`)
     setInquiries(prev => prev.filter(i => (i._id || i.id) !== id))
     if (selected && (selected._id || selected.id) === id) setSelected(null)
   }
